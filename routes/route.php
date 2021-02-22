@@ -16,15 +16,19 @@ if(count($routesArray)==0){
 if(count($routesArray) == 1 && 
     isset($_SERVER["REQUEST_METHOD"]) &&
     $_SERVER["REQUEST_METHOD"] == "GET"){
-        
-            $json = array(
-                "status" => 200,
-                "result" => "GET"
-            );
-            echo json_encode($json, http_response_code($json["status"]));
+        /*PETICIONES GET CON FILTRO*/
+        if(isset($_GET["linkTo"]) && isset($_GET["equalTo"])){
+           
+            $response = new GetController();
+            $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
+        }else{
 
-            return;
 
+
+         /*PETICIONES GET SIN FILTRO*/
+            $response = new GetController();
+            $response -> getData($routesArray[1]);
+        }
 
     }
     /*PETICIONES POST*/
