@@ -8,5 +8,6 @@ header('content-type: application/json; charset=utf-8');
 require_once "controllers/route.controller.php";
 
 
+
 $index = new RoutesController();
 $index -> index();
