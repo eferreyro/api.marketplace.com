@@ -11,15 +11,25 @@ if(count($routesArray)==0){
     echo json_encode($json, http_response_code($json["status"]));
     return;
 }else{
-    $json = array(
-        "status" => 200,
-        "result" => $routesArray[1]
-    );
-    echo json_encode($json, http_response_code($json["status"]));
-    return;
+
+    /*PETICIONES GET*/
+if(count($routesArray) == 1 && 
+    isset($_SERVER["REQUEST_METHOD"]) &&
+    $_SERVER["REQUEST_METHOD"] == "GET"){
+        
+            $json = array(
+                "status" => 200,
+                "result" => "GET"
+            );
+            echo json_encode($json, http_response_code($json["status"]));
+            
+            return;
+
+
+    }
+
+
 }
-
-
 
 
 ?>
