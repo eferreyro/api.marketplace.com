@@ -143,7 +143,7 @@ class GetModel
 
     static public function getSearchData($table, $linkTo, $search){
         $stmt = Connection::connect()->prepare("SELECT * FROM $table WHERE $linkTo LIKE '%$search%'");
-        $stmt->bindParam(":" . $linkTo, $equalTo, PDO::PARAM_STR);
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_CLASS);
     }
