@@ -21,9 +21,13 @@ if(count($routesArray) == 1 &&
            
             $response = new GetController();
             $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
+
+    /* Peticiones GET de TABLAS RELACIONADAS sin filtro */
+        }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0]== "relations"){
+            $response = new GetController();
+            $response->getRelData( $_GET["rel"], $_GET["type"]);    
+        
         }else{
-
-
 
          /*PETICIONES GET SIN FILTRO*/
             $response = new GetController();
@@ -32,8 +36,7 @@ if(count($routesArray) == 1 &&
 
     }
     /*PETICIONES POST*/
-    if (
-        count($routesArray) == 1 &&
+    if (count($routesArray) == 1 &&
         isset($_SERVER["REQUEST_METHOD"]) &&
         $_SERVER["REQUEST_METHOD"] == "POST"
     ) {
