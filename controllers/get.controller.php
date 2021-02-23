@@ -16,7 +16,9 @@ class GetController{
         $return = new GetController();
         $return->fncResponse($response, "getFilterData");
     }
-    /* Peticiones GET de TABLAS RELACIONADAS sin filtro */
+    /* =================================================
+    Peticiones GET de TABLAS RELACIONADAS sin filtro 
+    =================================================*/
     public function getRelData($rel, $type)
     {
         $response = GetModel::getRelData($rel, $type);
@@ -24,9 +26,22 @@ class GetController{
         $return->fncResponse($response, "getRelData");
     }
 
+    /* =================================================
+    Peticiones GET de TABLAS RELACIONADAS CON filtro 
+    =================================================*/
+    public function getRelFilterData($rel, $type, $linkTo, $equalTo)
+    {
+        $response = GetModel::getRelFilterData($rel, $type, $linkTo, $equalTo);
+        $return = new GetController();
+        $return->fncResponse($response,
+            "getRelData"
+        );
+    }
 
 
-     /* Funcion de Respuesta GET */
+    /* =================================================
+        Funcion de Respuesta GET del Controller
+     =================================================*/
     public function fncResponse($response, $method){
         if (!empty($response)) {
             $json = array(

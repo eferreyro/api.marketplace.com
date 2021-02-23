@@ -2,7 +2,9 @@
 
 $routesArray = explode("/", $_SERVER['REQUEST_URI']);
 $routesArray = array_filter($routesArray);
-/*CUANDO NO SE HACE UNA PETICION A LA API*/
+/* =================================================
+CUANDO NO SE HACE UNA PETICION A LA API
+=================================================*/
 if(count($routesArray)==0){
     $json = array(
         "status" => 404,
@@ -12,30 +14,48 @@ if(count($routesArray)==0){
     return;
 }else{
 
-    /*PETICIONES GET*/
+    /* =================================================
+    PETICIONES GET
+    =================================================*/
 if(count($routesArray) == 1 && 
     isset($_SERVER["REQUEST_METHOD"]) &&
     $_SERVER["REQUEST_METHOD"] == "GET"){
-        /*PETICIONES GET CON FILTRO*/
-        if(isset($_GET["linkTo"]) && isset($_GET["equalTo"])){
+        /* =================================================
+        PETICIONES GET CON FILTRO
+        =================================================*/
+        if(isset($_GET["linkTo"]) && isset($_GET["equalTo"]) && !isset($_GET["rel"]) && !isset($_GET["type"])){
            
             $response = new GetController();
             $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
 
-    /* Peticiones GET de TABLAS RELACIONADAS sin filtro */
-        }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0]== "relations"){
-            $response = new GetController();
-            $response->getRelData( $_GET["rel"], $_GET["type"]);    
-        
-        }else{
+    /* =================================================
+     Peticiones GET de TABLAS RELACIONADAS sin filtro 
+    =================================================*/
 
-         /*PETICIONES GET SIN FILTRO*/
+        }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0]== "relations" && !isset($_GET["linkTo"]) && !isset($_GET["equalTo"])){
+            $response = new GetController();
+            $response->getRelData( $_GET["rel"], $_GET["type"]);
+    /* =================================================
+     Peticiones GET de TABLAS RELACIONADAS sin filtro 
+    =================================================*/
+    } else if (isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0] == "relations" && isset($_GET["linkTo"]) && isset($_GET["equalTo"]))
+    {
+        $response = new GetController();
+        $response->getRelFilterData($_GET["rel"], $_GET["type"], $_GET["linkTo"], $_GET["equalTo"]);
+    }
+        else{
+
+         /* =================================================
+         PETICIONES GET SIN FILTRO
+         =================================================*/
             $response = new GetController();
             $response -> getData($routesArray[1]);
         }
 
     }
-    /*PETICIONES POST*/
+    /* =================================================
+    PETICIONES POST
+    =================================================*/
     if (count($routesArray) == 1 &&
         isset($_SERVER["REQUEST_METHOD"]) &&
         $_SERVER["REQUEST_METHOD"] == "POST"
@@ -51,7 +71,9 @@ if(count($routesArray) == 1 &&
 
 
 }
-    /*PETICIONES PUT*/
+    /* =================================================
+    PETICIONES PUT
+    =================================================*/
     if (
         count($routesArray) == 1 &&
         isset($_SERVER["REQUEST_METHOD"]) &&
@@ -67,7 +89,9 @@ if(count($routesArray) == 1 &&
         return;
     }
 
-    /*PETICIONES DELETE*/
+    /* =================================================
+    PETICIONES DELETE
+    =================================================*/
     if (
         count($routesArray) == 1 &&
         isset($_SERVER["REQUEST_METHOD"]) &&
