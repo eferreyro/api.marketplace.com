@@ -37,8 +37,18 @@ class GetController{
             "getRelData"
         );
     }
-
-
+    /* =================================================
+        Funcion GET para el Buscador
+     =================================================*/
+    
+    public function getSearchData($table, $linkTo, $search)
+    {
+        $response = GetModel::getSearchData($table, $linkTo, $search);
+        $return = new GetController();
+        $return->fncResponse($response,
+            "getSearchData"
+        );
+    }
     /* =================================================
         Funcion de Respuesta GET del Controller
      =================================================*/
