@@ -24,38 +24,78 @@ if(count($routesArray) == 1 &&
         PETICIONES GET CON FILTRO
         =================================================*/
         if(isset($_GET["linkTo"]) && isset($_GET["equalTo"]) && !isset($_GET["rel"]) && !isset($_GET["type"])){
-           
+            if (isset($_GET["orderBy"]) && isset($_GET["orderMode"])) {
+                $orderBy = $_GET["orderBy"];
+                $orderMode = $_GET["orderMode"];
+            } else {
+                $orderBy = null;
+                $orderMode = null;
+            }
+
             $response = new GetController();
-            $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"]);
+            $response->getFilterData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode);
 
     /* =================================================
-     Peticiones GET de TABLAS RELACIONADAS sin filtro 
+     Peticiones GET de tablas relacionadas SIN filtro 
     =================================================*/
 
-        }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0]== "relations" && !isset($_GET["linkTo"]) && !isset($_GET["equalTo"])){
+        }else if(isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0]== "relations" &&
+         !isset($_GET["linkTo"]) && !isset($_GET["equalTo"])){
+            /* Preguntamos si vienen variables de Orden */
+            if (isset($_GET["orderBy"]) && isset($_GET["orderMode"])) {
+                $orderBy = $_GET["orderBy"];
+                $orderMode = $_GET["orderMode"];
+            } else {
+                $orderBy = null;
+                $orderMode = null;
+            }
+            
             $response = new GetController();
-            $response->getRelData( $_GET["rel"], $_GET["type"]);
+            $response->getRelData( $_GET["rel"], $_GET["type"], $orderBy, $orderMode);
     /* =================================================
      Peticiones GET de TABLAS RELACIONADAS con filtro 
     =================================================*/
     } else if (isset($_GET["rel"]) && isset($_GET["type"]) && explode("?", $routesArray[1])[0] == "relations" && isset($_GET["linkTo"]) && isset($_GET["equalTo"]))
     {
+            /* Preguntamos si vienen variables de Orden */
+            if (isset($_GET["orderBy"]) && isset($_GET["orderMode"])) {
+                $orderBy = $_GET["orderBy"];
+                $orderMode = $_GET["orderMode"];
+            } else {
+                $orderBy = null;
+                $orderMode = null;
+            }
         $response = new GetController();
-        $response->getRelFilterData($_GET["rel"], $_GET["type"], $_GET["linkTo"], $_GET["equalTo"]);
+        $response->getRelFilterData($_GET["rel"], $_GET["type"], $_GET["linkTo"], $_GET["equalTo"], $orderBy, $orderMode);
     
     /* =================================================
-        PETICIONES GET SIN FILTRO
+        Peticiones GET para el BUSCADOR
     =================================================*/
     }else if(isset($_GET["linkTo"]) && isset($_GET["search"])){
+            /* Preguntamos si vienen variables de Orden */
+            if (isset($_GET["orderBy"]) && isset($_GET["orderMode"])) {
+                $orderBy = $_GET["orderBy"];
+                $orderMode = $_GET["orderMode"];
+            } else {
+                $orderBy = null;
+                $orderMode = null;
+            }
         $response = new GetController();
-        $response->getSearchData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["search"]);
+        $response->getSearchData(explode("?", $routesArray[1])[0], $_GET["linkTo"], $_GET["search"], $orderBy, $orderMode);
+        
+    /* =================================================
+              PETICIONES GET SIN FILTRO
+    =================================================*/
     }else{
-
-         /* =================================================
-         PETICIONES GET SIN FILTRO
-         =================================================*/
+        if(isset($_GET["orderBy"]) && isset($_GET["orderMode"])){
+            $orderBy = $_GET["orderBy"];
+            $orderMode = $_GET["orderMode"];
+        }else{
+                $orderBy = null;
+                $orderMode = null;
+        }
             $response = new GetController();
-            $response -> getData($routesArray[1]);
+            $response -> getData(explode("?", $routesArray[1])[0], $orderBy, $orderMode);
         }
 
     }
