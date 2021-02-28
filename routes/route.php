@@ -104,18 +104,54 @@ if(count($routesArray) == 1 &&
     =================================================*/
     if (count($routesArray) == 1 &&
         isset($_SERVER["REQUEST_METHOD"]) &&
-        $_SERVER["REQUEST_METHOD"] == "POST"
-    ) {
+        $_SERVER["REQUEST_METHOD"] == "POST")
+        {
+    /* =================================================
+    Contamos la cantidad de columnas que tiene una tabla
+    =================================================*/
+    $columns = array();
+    $database = RoutesController::database();
+    $response =PostController::getColumnsData(explode("?", $routesArray[1])[0],$database);
 
-        $json = array(
-                "status" => 200,
-                "result" => "POST"
-            );
-        echo json_encode($json, http_response_code($json["status"]));
-
-        return;
-
-
+            if(isset($_POST)){
+    /* =================================================
+    Recibimos respuesta del controlador para cerar datos en cualquier tabla
+    =================================================*/
+                
+                $response = new PostController();
+                $response -> postData(explode("?", $routesArray[1])[0], $_POST);
+foreach ($responde as $key => $value) {
+    array_push($columns, $value->item);
+}
+/* Quitamos el primer y ultimo indice del array */
+    array_shift($columns);#quito el primer indice de ID
+    array_pop($columns); #quito el ultimo indice de date_uldated_at que es
+    /* Recibimos los valores POST */
+        if(isset($_POST)){
+            $count = 0;
+            foreach($columns as $key => $value){
+               if(array_keys($_POST)[$key] == $value){
+                $count++;
+               }else{
+                    $json = array(
+                        "status" => 400,
+                        "result" => "Error! Los campos enviados no coinciden con la DB"
+                    );
+                    echo json_encode($json, http_response_code($json["status"]));
+                    return;
+               }
+            }
+            /* Validamos que las variables POST coinciden con la DB */
+            if($count == count($columns)){
+                echo "coincide";
+                return;
+                /* Solicito respuesta del controller para crear los datos */
+                $response = new PostController();
+                $response -> postData(explode("?", $routesArray[1])[0], $_POST);
+            }
+        }
+       
+    }
 }
     /* =================================================
     PETICIONES PUT
